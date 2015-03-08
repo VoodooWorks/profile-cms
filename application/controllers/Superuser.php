@@ -60,8 +60,34 @@ class Superuser extends CI_Controller {
 	 */
 	public function index()
 	{
+		$this->load->helper('cookie');
+		$cookie = get_cookie('isAdmin');
+		if($cookie == null){
+			$this->load->helper('url');
+			redirect('/');
+		}
+
+		$users = $this->user->getAccounts();
+
+		$this->smarty->assign('accounts', $users);
+
 		$this->smarty->assign("title", "Superuser");
 		$this->smarty->display("superuser.tpl");
+	}
+
+    /**deletes the user account
+     * @param $username the username of the account being deleted
+     */
+	public function delete($username){
+
+		if($this->user->deleteAccount($username)){
+			$this->smarty->assign("message", "Account Successfully Deleted");
+		}else{
+			$this->smarty->assign("message", "There was an Error Deleting The Account");
+		}
+
+		$this->load->helper('url');
+		redirect('superuser');
 	}
 }
 

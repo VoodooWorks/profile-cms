@@ -65,9 +65,18 @@ class Welcome extends CI_Controller {
 
 			$creds = $this->user->getCredentials($email);
 			if((!empty($creds)) && $password == $creds["password"]){
-				//$this->goToProfileEditor();
+                $this->load->helper('cookie');
 				$this->load->helper('url');
-				redirect('profileeditor/' . $creds["username"]);
+                set_cookie('valid_login', 'yes', 4*60*60);
+				if($creds["securityrole"] == "admin"){
+
+					set_cookie('isAdmin', 'yes', 30*60);
+					redirect('superuser');
+				}else{
+					redirect('profileeditor/' . $creds["username"]);
+				}
+
+
 			}else{
 				// return back to the main page. Going to need to return errors here aswell
 				$this->smarty->assign("title", "Welcome");

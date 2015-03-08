@@ -1,5 +1,5 @@
 {include file="_main_header.tpl"}
-<form>
+<form enctype="multipart/form-data">
     <p>{$notification|default:""}</p>
     <ul class="collapsible" data-collapsible="accordion">
         {* STORY AND ABOUT *}
@@ -13,8 +13,9 @@
                         <img src="{$image}" alt="" class="circle responsive-img">
                         <div class="row">
                             <div class="input-field col s12">
-                                <input id="photo" type="file" class="validate"">
+                                <input id="photo" name="photo" type="file" class="validate">
                             </div>
+
                         </div>
                     </div>
                     <div class="col s4">
@@ -46,6 +47,52 @@
                                 <label for="email">Email</label>
                             </div>
                         </div>
+                        {* Three descriptions about me *}
+                        {* Title 1 *}
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="tab1_title" name="tab1_title" type="text" class="validate" value="{$t1_title}">
+                                <label for="tab1_title">Tab 1: Title</label>
+                            </div>
+                        </div>
+                        {* Description 1 *}
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <textarea id="tab1_description" name="tab1_description"
+                                          class="materialize-textarea validate">{$t1_description}</textarea>
+                                <label for="tab1_description">Tab 1: Description</label>
+                            </div>
+                        </div>
+                        {* Title 2 *}
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="tab2_title" name="tab2_title" type="text" class="validate" value="{$t2_title}">
+                                <label for="tab2_title">Tab 2: Title</label>
+                            </div>
+                        </div>
+                        {* Description 2*}
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <textarea id="tab2_description" name="tab2_description"
+                                          class="materialize-textarea validate">{$t2_description}</textarea>
+                                <label for="tab2_description">Tab 2: Description</label>
+                            </div>
+                        </div>
+                        {* Title 3 *}
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="tab3_title" name="tab3_title" type="text" class="validate" value="{$t3_title}">
+                                <label for="tab3_title">Tab 3: Title</label>
+                            </div>
+                        </div>
+                        {* Description 3*}
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <textarea id="tab3_description" name="tab3_description"
+                                          class="materialize-textarea validate">{$t3_description}</textarea>
+                                <label for="tab3_description">Tab 3: Description</label>
+                            </div>
+                        </div>
                         {* Links *}
                         <div class="row">
                             <div class="input-field col s12">
@@ -55,14 +102,14 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <input id="github" type="text" class="validate" name="github" value="{$github}">
-                                <label for="github">Github</label>
+                                <input id="twitter" type="text" class="validate" name="twitter" value="{$twitter}">
+                                <label for="twitter">Twitter</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <input id="twitter" type="text" class="validate" name="twitter" value="{$twitter}">
-                                <label for="twitter">Twitter</label>
+                                <input id="github" type="text" class="validate" name="github" value="{$github}">
+                                <label for="github">GitHub</label>
                             </div>
                         </div>
                     </div>
@@ -71,54 +118,117 @@
         </li>
         {* PROJECTS *}
         <li>
-            <div class="collapsible-header story"><i class="mdi-maps-local-shipping white-text"></i>
-                <span class="white-text">Projects</div>
+            <div class="collapsible-header {$active|default:""} story "><i class="mdi-maps-local-shipping white-text"></i>
+                <span class="white-text">Projects</span></div>
             <div class="padded collapsible-body white">
                 {* for-loop here (might be an issue with input id being unique)*}
-                <div class="row" style="border-bottom: solid 1px grey">
-                    <div class="col s5">
-                        {* Image *}
-                        <img src="{$p1_image}" height="250px">
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <input id="project_image" type="file" class="validate"">
+                {foreach $projects as $project}
+                    <div class="row" style="border-bottom: solid 1px grey">
+                        <div class="col s5">
+                            {* Image *}
+                            <img src="{$project.projectpicture}" height="250px">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="project_image" name="{$project.projectname}_image" type="file" class="validate">
+                                </div>
                             </div>
+                        </div>
+                        <div class="col s7">
+                            {* Title *}
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="project_title" name="{$project.projectname}_title" type="text" class="validate" value="{$project.projectname}">
+                                    <label for="project_title">Title</label>
+                                </div>
+                            </div>
+                            {* Description *}
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <label>Description</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                <textarea id="project_title" class="ckeditor materialize-textarea"
+                                          name="project_title">{$project.projectdescription}</textarea>
+                                </div>
+                            </div>
+                            {foreach $project.links as $link}
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input id="project_{$link.linkname}" name="{$project.projectname}_{$link.linkname}_link" type="text" class="validate" value="{$link.linkurl}">
+                                        <label for="project_{$link.linkname}">{$link.linkname}</label>
+                                    </div>
+                                </div>
+                            {/foreach}
+                            {* Buttons *}
+                            <div class="row">
+                                <button class="btn waves-effect waves-light" type="submit" name="action" formmethod="POST">Update
+                                    <i class="mdi-content-save right"></i>
+                                </button>
+                                <button class="btn waves-effect waves-light red lighten-1" >Delete
+                                    <i class="mdi-content-remove-circle-outline right"></i>
+                                </button>
+                            </div>
+                            {* Link *}
+                            {*<div class="row">
+                                <div class="input-field col s12">
+                                    <input id="project_link" type="text" class="validate" value="{$project.link}">
+                                    <label for="project_link">Link</label>
+                                </div>
+                            </div>
+                            {* Github link *}{*
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="project_github" type="text" class="validate" value="{$github|default:'filler'}">
+                                    <label for="project_github">Github</label>
+                                </div>
+                            </div>*}
                         </div>
                     </div>
-                    <div class="col s4">
-                        {* Title *}
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <input id="project_title" type="text" class="validate" value="{$p1_title}">
-                                <label for="project_title">Title</label>
+                {/foreach}
+
+                {* Add button will add another form for new projects*}
+                 <a class="btn-floating btn-large waves-effect waves-light red right"
+                   onclick="document.getElementById('newprojectdiv').style.display = 'block'"><i class="mdi-content-add"></i></a>
+                <div id="newprojectdiv" class="row" style="display:none">
+                    <div class="offset-s6 col s6" id="addProject">
+                        {* <form id="newProject"> *}
+                            <div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <input id="newprojectname" type="text" class="validate" name="newprojectname">
+                                        <label for="newprojectname">Project Name</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <label for="newprojectlink">GitHub Link</label>
+                                        <input id="newprojectlink" name="newprojectlink" type="url">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <label>Project Description</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <textarea id="newprojectdescription" class="ckeditor materialize-textarea"
+                                                  name="newprojectdescription"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <button class="btn waves-effect waves-light" type="submit" name="action"
+                                            formaction="/profileeditor/{$username}/addproject" formmethod="POST">Add
+                                        <i class="mdi-content-send right"></i>
+                                    </button>
+                                    <button class="btn waves-effect waves-light" type="reset">Reset</button>
+                                </div>
                             </div>
-                        </div>
-                        {* Description *}
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <textarea id="project_description"
-                                          class="materialize-textarea validate">{$p1_description}</textarea>
-                                <label for="project_description">Description</label>
-                            </div>
-                        </div>
-                        {* Link *}
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <input id="project_link" type="text" class="validate" value="{$p1_link}">
-                                <label for="project_link">Link</label>
-                            </div>
-                        </div>
-                        {* Github link *}
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <input id="project_github" type="text" class="validate" value="{$github}">
-                                <label for="project_github">Github</label>
-                            </div>
-                        </div>
+                        {* </form> *}
                     </div>
                 </div>
-                {* Add button will add another form for new projects*}
-                <a class="btn-floating btn-large waves-effect waves-light red right"><i class="mdi-content-add"></i></a>
             </div>
         </li>
         {* RESUME *}
@@ -128,7 +238,7 @@
             <div class="collapsible-body white padded">
                 <div class="row">
                     <div class="input-field col s12">
-                        <input id="resume" type="file" class="validate"">
+                        <input id="resume" name="resume" type="file" class="validate">
                     </div>
                 </div>
             </div>
